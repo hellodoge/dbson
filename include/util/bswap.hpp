@@ -12,6 +12,7 @@ namespace util {
             *e = tmp;
             *s++, *e--;
         }
+        return x;
     }
 }
 
