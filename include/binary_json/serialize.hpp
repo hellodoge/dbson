@@ -49,7 +49,7 @@ namespace binary_json {
     template <typename Writer>
     size_t serialize_integer(Writer w, integer x) {
         *w++ = Integer;
-        return serialize_int<integer, uint32_t>(w, x);
+        return serialize_int<integer, uint32_t>(w, x) + 1;
     }
 
     template <typename Writer>
@@ -60,7 +60,7 @@ namespace binary_json {
         const char *bytes = s.c_str();
         for (size_t i = 0; i < str_size; i++)
             *w++ = bytes[i];
-        return len_size + str_size;
+        return len_size + str_size + 1;
     }
 
     template <typename Writer>
@@ -74,7 +74,7 @@ namespace binary_json {
         for (auto&& el : arr) {
             size += serialize_object(w, el);
         }
-        return size;
+        return size + 1;
     }
 
     template <typename Writer>
