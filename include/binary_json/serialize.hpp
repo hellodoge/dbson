@@ -48,17 +48,32 @@ namespace binary_json {
 
     template <typename Writer>
     size_t serialize_integer(Writer w, integer x) {
+        *w++ = Integer;
         return serialize_int<integer, uint32_t>(w, x);
     }
 
     template <typename Writer>
     size_t serialize_string(Writer w, const string &s) {
+        *w++ = String;
         const size_t str_size = s.length();
         const size_t len_size = serialize_len(w, str_size);
         const char *bytes = s.c_str();
         for (size_t i = 0; i < str_size; i++)
             *w++ = bytes[i];
         return len_size + str_size;
+    }
+
+    template <typename Writer>
+    size_t serialize_object(Writer w, const object_t &obj) {
+        auto visitor = [&](auto &v) {
+            using T = std::decay_t<decltype(v)>;
+            if constexpr (std::is_same<T, integer>::value)
+                return serialize_integer(w, v);
+            if constexpr (std::is_same<T, string>::value)
+                return serialize_string(w, v);
+            return (size_t)0;
+        };
+        return boost::apply_visitor(visitor, obj);
     }
 }
 
