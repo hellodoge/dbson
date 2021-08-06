@@ -32,7 +32,7 @@ binary_json::object_t &db::Object::resolve(std::string_view path) {
     while (cursor != end) {
         auto assoc_ptr = boost::get<binary_json::assoc>(obj);
         if (assoc_ptr == nullptr) {
-            auto null_ptr = boost::get<binary_json::assoc>(obj);
+            auto null_ptr = boost::get<binary_json::none>(obj);
             if (null_ptr == nullptr)
                 throw std::domain_error("resolve: not an assoc");
             *obj = binary_json::assoc{};
