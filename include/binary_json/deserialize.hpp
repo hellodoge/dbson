@@ -7,6 +7,7 @@
 
 #include "binary_json/object.hpp"
 #include "exceptions/eof_error.hpp"
+#include "util/bswap.hpp"
 
 namespace binary_json {
 
@@ -53,6 +54,20 @@ namespace binary_json {
         uint32_t deserialized = read_uint<uint32_t>(r, end);
         deserialized = ntohl(deserialized);
         return static_cast<integer>(deserialized);
+    }
+
+    template <typename Reader, typename ReaderEnd>
+    real deserialize_real(Reader &r, ReaderEnd end) noexcept(false) {
+        real deserialized;
+        char *bytes = reinterpret_cast<char *>(&deserialized);
+        for (size_t i = 0; i < sizeof(real); i++) {
+            if (r == end)
+                throw eof_error{};
+            bytes[i] = *r++;
+        }
+        if (BYTE_ORDER == LITTLE_ENDIAN)
+            deserialized = util::bswap(deserialized);
+        return deserialized;
     }
 
     template <typename Reader, typename ReaderEnd>
@@ -109,7 +124,7 @@ namespace binary_json {
             case Integer:
                 return deserialize_integer(r, end);
             case Real:
-                break;
+                return deserialize_real(r, end);
             case String:
                 return deserialize_string(r, end);
             case Array:
