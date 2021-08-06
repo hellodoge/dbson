@@ -64,6 +64,20 @@ namespace binary_json {
     }
 
     template <typename Writer>
+    size_t serialize_object(Writer w, const object_t &obj);
+
+    template <typename Writer>
+    size_t serialize_array(Writer w, const array &arr) {
+        *w++ = Array;
+        const size_t arr_length = arr.size();
+        size_t size = serialize_len(w, arr_length);
+        for (auto&& el : arr) {
+            size += serialize_object(w, el);
+        }
+        return size;
+    }
+
+    template <typename Writer>
     size_t serialize_object(Writer w, const object_t &obj) {
         auto visitor = [&](auto &v) {
             using T = std::decay_t<decltype(v)>;
@@ -71,6 +85,8 @@ namespace binary_json {
                 return serialize_integer(w, v);
             if constexpr (std::is_same<T, string>::value)
                 return serialize_string(w, v);
+            if constexpr (std::is_same<T, array>::value)
+                return serialize_array(w, v);
             return (size_t)0;
         };
         return boost::apply_visitor(visitor, obj);
