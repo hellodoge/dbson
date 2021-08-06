@@ -112,7 +112,7 @@ namespace binary_json {
                 return serialize_array(w, v);
             if constexpr (std::is_same<T, assoc>::value)
                 return serialize_assoc(w, v);
-            return (size_t)0;
+            throw std::logic_error("serializer is not implemented");
         };
         return boost::apply_visitor(visitor, obj);
     }
