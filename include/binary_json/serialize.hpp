@@ -7,6 +7,7 @@
 #include <numeric>
 
 #include "binary_json/object.hpp"
+#include "util/bswap.hpp"
 
 namespace binary_json {
 
@@ -68,6 +69,8 @@ namespace binary_json {
     template <typename Writer>
     size_t serialize_real(Writer &w, real x) {
         *w++ = Real;
+        if (BYTE_ORDER == LITTLE_ENDIAN)
+            x = util::bswap(x);
         const char *bytes = reinterpret_cast<const char *>(&x);
         for (size_t i = 0; i < sizeof(real); i++)
             *w++ = bytes[i];
