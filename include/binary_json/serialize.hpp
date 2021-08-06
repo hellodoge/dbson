@@ -92,12 +92,12 @@ namespace binary_json {
             using T = std::decay_t<decltype(v)>;
             if constexpr (std::is_same<T, integer>::value)
                 return serialize_integer(w, v);
+            if constexpr (std::is_same<T, real>::value)
+                return serialize_real(w, v);
             if constexpr (std::is_same<T, string>::value)
                 return serialize_string(w, v);
             if constexpr (std::is_same<T, array>::value)
                 return serialize_array(w, v);
-            if constexpr (std::is_same<T, real>::value)
-                return serialize_real(w, v);
             return (size_t)0;
         };
         return boost::apply_visitor(visitor, obj);
