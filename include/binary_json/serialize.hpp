@@ -15,7 +15,7 @@ namespace binary_json {
             std::is_same<Target, uint32_t>::value ||
             std::is_same<Target, uint64_t>::value
     )
-    size_t serialize_uint(Writer w, From x) {
+    size_t serialize_uint(Writer &w, From x) {
         Target network_order;
         if (std::is_same<Target, uint16_t>::value) {
             network_order = htons(static_cast<uint16_t>(x));
@@ -30,7 +30,7 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_len(Writer w, size_t len) {
+    size_t serialize_len(Writer &w, size_t len) {
         if (len <= std::numeric_limits<uint16_t>::max()) {
             *w++ = static_cast<char>(sizeof(uint16_t));
             return serialize_uint<size_t, uint16_t>(w, len) + 1;
@@ -47,14 +47,14 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_integer(Writer w, integer x) {
+    size_t serialize_integer(Writer &w, integer x) {
         *w++ = Integer;
         uint32_t serializable = static_cast<uint32_t>(x);
         return serialize_uint<integer, uint32_t>(w, serializable) + 1;
     }
 
     template <typename Writer>
-    size_t serialize_string(Writer w, const string &s) {
+    size_t serialize_string(Writer &w, const string &s) {
         *w++ = String;
         const size_t str_size = s.length();
         const size_t len_size = serialize_len(w, str_size);
@@ -65,7 +65,7 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_real(Writer w, real x) {
+    size_t serialize_real(Writer &w, real x) {
         *w++ = Real;
         const char *bytes = reinterpret_cast<const char *>(&x);
         for (size_t i = 0; i < sizeof(real); i++)
@@ -74,10 +74,10 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_object(Writer w, const object_t &obj);
+    size_t serialize_object(Writer &w, const object_t &obj);
 
     template <typename Writer>
-    size_t serialize_array(Writer w, const array &arr) {
+    size_t serialize_array(Writer &w, const array &arr) {
         *w++ = Array;
         const size_t arr_length = arr.size();
         size_t size = serialize_len(w, arr_length);
@@ -88,7 +88,7 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_assoc(Writer w, const assoc &obj) {
+    size_t serialize_assoc(Writer &w, const assoc &obj) {
         *w++ = Assoc;
         const size_t map_length = obj.size();
         size_t size = serialize_len(w, map_length);
@@ -100,7 +100,7 @@ namespace binary_json {
     }
 
     template <typename Writer>
-    size_t serialize_object(Writer w, const object_t &obj) {
+    size_t serialize_object(Writer &w, const object_t &obj) {
         auto visitor = [&](auto &v) {
             using T = std::decay_t<decltype(v)>;
             if constexpr (std::is_same<T, integer>::value)
