@@ -43,7 +43,7 @@ namespace binary_json {
             *w++ = static_cast<char>(sizeof(uint64_t));
             return serialize_int<size_t, uint64_t>(w, len) + 1;
         }
-        return 0;
+        throw std::runtime_error("serializer: object's length is too big");
     }
 
     template <typename Writer>
