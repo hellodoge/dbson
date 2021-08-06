@@ -64,6 +64,15 @@ namespace binary_json {
     }
 
     template <typename Writer>
+    size_t serialize_real(Writer w, real x) {
+        *w++ = Real;
+        const char *bytes = reinterpret_cast<const char *>(&x);
+        for (size_t i = 0; i < sizeof(real); i++)
+            *w++ = bytes[i];
+        return sizeof(real);
+    }
+
+    template <typename Writer>
     size_t serialize_object(Writer w, const object_t &obj);
 
     template <typename Writer>
@@ -87,6 +96,8 @@ namespace binary_json {
                 return serialize_string(w, v);
             if constexpr (std::is_same<T, array>::value)
                 return serialize_array(w, v);
+            if constexpr (std::is_same<T, real>::value)
+                return serialize_real(w, v);
             return (size_t)0;
         };
         return boost::apply_visitor(visitor, obj);
