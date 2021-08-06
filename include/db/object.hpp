@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include "binary_json/object.hpp"
+#include "binary_json/serialize.hpp"
 
 using namespace std::chrono_literals;
 
@@ -17,6 +18,13 @@ namespace db {
 
         bool isExpired();
         void setExpiration(std::chrono::seconds da);
+
+        template <typename Writer>
+        size_t getSerialized(Writer w, std::string_view path) noexcept(false) {
+            auto &obj = this->resolve(path);
+            size_t bytes_written = binary_json::serialize_object(w, obj);
+            return bytes_written;
+        }
 
     private:
         binary_json::object_t &resolve(std::string_view path);
