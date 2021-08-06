@@ -43,6 +43,9 @@ binary_json::object_t &db::Object::resolve(std::string_view path) {
         std::string_view key {&*cursor, static_cast<size_t>(colon-cursor)};
         auto [resolved_iter, _] = assoc.emplace(key, boost::none);
         obj = &resolved_iter->second;
+        cursor = colon;
+        if (cursor != end)
+            cursor++;
     }
     return std::ref(*obj);
 }
