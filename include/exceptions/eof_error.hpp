@@ -2,7 +2,7 @@
 #define DBSON_EOF_ERROR_HPP
 
 struct eof_error : std::runtime_error {
-    explicit eof_error(const char *unnamed="unexpected eof") : runtime_error(unnamed) {}
+    explicit eof_error(const char *msg="unexpected eof") : runtime_error(msg) {}
 };
 
 #endif //DBSON_EOF_ERROR_HPP
