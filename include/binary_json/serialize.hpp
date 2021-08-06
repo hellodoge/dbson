@@ -15,7 +15,7 @@ namespace binary_json {
             std::is_same<Target, uint32_t>::value ||
             std::is_same<Target, uint64_t>::value
     )
-    size_t serialize_int(Writer w, From x) {
+    size_t serialize_uint(Writer w, From x) {
         Target network_order;
         if (std::is_same<Target, uint16_t>::value) {
             network_order = htons(static_cast<uint16_t>(x));
@@ -33,15 +33,15 @@ namespace binary_json {
     size_t serialize_len(Writer w, size_t len) {
         if (len <= std::numeric_limits<uint16_t>::max()) {
             *w++ = static_cast<char>(sizeof(uint16_t));
-            return serialize_int<size_t, uint16_t>(w, len) + 1;
+            return serialize_uint<size_t, uint16_t>(w, len) + 1;
         }
         if (len <= std::numeric_limits<uint32_t>::max()) {
             *w++ = static_cast<char>(sizeof(uint32_t));
-            return serialize_int<size_t, uint32_t>(w, len) + 1;
+            return serialize_uint<size_t, uint32_t>(w, len) + 1;
         }
         if (len <= std::numeric_limits<uint64_t>::max()) {
             *w++ = static_cast<char>(sizeof(uint64_t));
-            return serialize_int<size_t, uint64_t>(w, len) + 1;
+            return serialize_uint<size_t, uint64_t>(w, len) + 1;
         }
         throw std::runtime_error("serializer: object's length is too big");
     }
@@ -49,7 +49,8 @@ namespace binary_json {
     template <typename Writer>
     size_t serialize_integer(Writer w, integer x) {
         *w++ = Integer;
-        return serialize_int<integer, uint32_t>(w, x) + 1;
+        uint32_t serializable = static_cast<uint32_t>(x);
+        return serialize_uint<integer, uint32_t>(w, serializable) + 1;
     }
 
     template <typename Writer>
