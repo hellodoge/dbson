@@ -81,6 +81,25 @@ namespace binary_json {
     }
 
     template <typename Reader, typename ReaderEnd>
+    assoc deserialize_assoc(Reader &r, ReaderEnd end) noexcept(false) {
+        const size_t obj_len = deserialize_len(r, end);
+        assoc obj{};
+        obj.reserve(obj_len);
+        for (size_t i = 0; i < obj_len; i++) {
+            if (r == end)
+                throw eof_error{};
+            datatype_id key_type = static_cast<datatype_id>(*r++);
+            if (key_type != String)
+                throw std::logic_error("deserializer: key other than string not supported");
+            string key = deserialize_string(r, end);
+            object_t value = deserialize_object(r, end);
+            auto entry = std::make_pair(std::move(key), std::move(value));
+            // providing a hint (obj.end() because serialized assoc probably will be sorted)
+            obj.insert(obj.end(), entry);
+        }
+    }
+
+    template <typename Reader, typename ReaderEnd>
     object_t deserialize_object(Reader &r, ReaderEnd end) noexcept(false) {
         if (r == end)
             throw eof_error{};
@@ -95,7 +114,7 @@ namespace binary_json {
             case Array:
                 return deserialize_array(r, end);
             case Assoc:
-                break;
+                return deserialize_assoc(r, end);
             case None:
                 break;
         }
