@@ -17,7 +17,7 @@ bool db::Object::isExpired() {
     if (this->delete_after == 0s)
         return false;
     auto since = db::clock::now() - this->modified;
-    auto sec_since = std::chrono::duration_cast<std::chrono::seconds>(since);
+    auto sec_since = std::chrono::duration_cast<db::time_units>(since);
     return (sec_since >= delete_after);
 }
 

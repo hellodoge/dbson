@@ -20,10 +20,10 @@ namespace db {
 
         auto getObject(std::string_view key) -> boost::optional<std::reference_wrapper<Object>>;
 
-        void setGlobalDeleteAfter(std::chrono::seconds da);
+        void setGlobalDeleteAfter(time_units da);
 
     private:
-        std::chrono::seconds global_delete_after = 0s;
+        time_units global_delete_after = 0s;
         std::map<std::string, Object, std::less<>> values{};
     };
 

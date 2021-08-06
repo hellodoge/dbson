@@ -12,6 +12,7 @@ namespace db {
 
     using clock = std::chrono::system_clock;
     using time_point = std::chrono::time_point<clock>;
+    using time_units = std::chrono::seconds;
 
     struct Object {
         explicit Object(binary_json::object_t obj);
@@ -31,7 +32,7 @@ namespace db {
 
     private:
         time_point modified;
-        std::chrono::seconds delete_after = 0s;
+        time_units delete_after = 0s;
         binary_json::object_t object;
     };
 }
