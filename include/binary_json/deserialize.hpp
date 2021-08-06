@@ -72,10 +72,10 @@ namespace binary_json {
 
     template <typename Reader, typename ReaderEnd>
     array deserialize_array(Reader &r, ReaderEnd end) noexcept(false) {
-        const size_t arr_size = deserialize_len(r, end);
+        const size_t arr_len = deserialize_len(r, end);
         array arr{};
-        arr.reserve(arr_size);
-        for (size_t i = 0; i < arr_size; i++)
+        arr.reserve(arr_len);
+        for (size_t i = 0; i < arr_len; i++)
             arr.push_back(deserialize_object(r, end));
         return arr;
     }
