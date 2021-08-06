@@ -19,14 +19,14 @@ namespace binary_json {
     >::type object_t;
 
     using array = std::vector<object_t>;
-    using map = flat_map<string, object_t>;
+    using assoc = flat_map<string, object_t>;
 
     enum datatype_id {
         Integer = 'i',
         Real = 'r',
         String = 's',
         Array = 'a',
-        Object = 'o',
+        Assoc = 'o',
         None = 'n'
     };
 
@@ -36,7 +36,7 @@ namespace binary_json {
         std::is_same<T, real>::value ||
         std::is_same<T, string>::value ||
         std::is_same<T, array>::value ||
-        std::is_same<T, map>::value;
+        std::is_same<T, assoc>::value;
 }
 
 #endif //DBSON_OBJECT_HPP
