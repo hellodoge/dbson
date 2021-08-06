@@ -105,7 +105,7 @@ namespace binary_json {
 
     template <typename Writer>
     size_t serialize_object(Writer &w, const object_t &obj) {
-        auto visitor = [&](auto &v) {
+        auto visitor = [&](auto &v) -> size_t {
             using T = std::decay_t<decltype(v)>;
             if constexpr (std::is_same<T, integer>::value) {
                 return serialize_integer(w, v);
