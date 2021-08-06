@@ -3,6 +3,7 @@
 
 #include <arpa/inet.h>
 #include <byteswap.h>
+#include <endian.h>
 #include <numeric>
 
 #include "binary_json/object.hpp"
@@ -21,7 +22,7 @@ namespace binary_json {
             network_order = htons(static_cast<uint16_t>(x));
         } else if (std::is_same<Target, uint32_t>::value) {
             network_order = htonl(static_cast<uint32_t>(x));
-        } else if (1 != htonl(1)) // htonll is not available so
+        } else if (BYTE_ORDER == LITTLE_ENDIAN) // htonll is not available so
             network_order = bswap_64(static_cast<uint64_t>(x));
         const char *bytes = reinterpret_cast<const char *>(&network_order);
         for (size_t i = 0; i < sizeof(Target); i++)

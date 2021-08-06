@@ -3,6 +3,7 @@
 
 #include <arpa/inet.h>
 #include <byteswap.h>
+#include <endian.h>
 
 #include "binary_json/object.hpp"
 #include "exceptions/eof_error.hpp"
@@ -40,7 +41,7 @@ namespace binary_json {
         }
         if (size == sizeof(uint64_t)) {
             uint64_t value_u64 = read_uint<uint64_t>(r, end);
-            if (1 != htonl(1))
+            if (BYTE_ORDER == LITTLE_ENDIAN)
                 value_u64 = bswap_64(value_u64);
             return static_cast<size_t>(value_u64);
         }
