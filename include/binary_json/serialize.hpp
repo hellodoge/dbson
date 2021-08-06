@@ -107,16 +107,20 @@ namespace binary_json {
     size_t serialize_object(Writer &w, const object_t &obj) {
         auto visitor = [&](auto &v) {
             using T = std::decay_t<decltype(v)>;
-            if constexpr (std::is_same<T, integer>::value)
+            if constexpr (std::is_same<T, integer>::value) {
                 return serialize_integer(w, v);
-            if constexpr (std::is_same<T, real>::value)
+            } else if constexpr (std::is_same<T, real>::value) {
                 return serialize_real(w, v);
-            if constexpr (std::is_same<T, string>::value)
+            } else if constexpr (std::is_same<T, string>::value) {
                 return serialize_string(w, v);
-            if constexpr (std::is_same<T, array>::value)
+            } else if constexpr (std::is_same<T, array>::value) {
                 return serialize_array(w, v);
-            if constexpr (std::is_same<T, assoc>::value)
+            } else if constexpr (std::is_same<T, assoc>::value) {
                 return serialize_assoc(w, v);
+            } else if constexpr (std::is_same<T, none>::value) {
+                *w++ = None;
+                return 1;
+            }
             throw std::logic_error("serializer is not implemented");
         };
         return boost::apply_visitor(visitor, obj);

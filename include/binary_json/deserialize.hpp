@@ -132,7 +132,7 @@ namespace binary_json {
             case Assoc:
                 return deserialize_assoc(r, end);
             case None:
-                break;
+                return boost::none;
         }
         throw std::domain_error("unknown type");
     }
