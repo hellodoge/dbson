@@ -1,7 +1,7 @@
 #ifndef DBSON_SERIALIZE_HPP
 #define DBSON_SERIALIZE_HPP
 
-#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <byteswap.h>
 #include <numeric>
 
