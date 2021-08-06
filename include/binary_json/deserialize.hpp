@@ -96,7 +96,7 @@ namespace binary_json {
             object_t value = deserialize_object(r, end);
             auto entry = std::make_pair(std::move(key), std::move(value));
             // providing a hint (obj.end() because serialized assoc probably will be sorted)
-            obj.insert(obj.end(), entry);
+            obj.insert(obj.end(), std::move(entry));
         }
     }
 
