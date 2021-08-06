@@ -113,6 +113,7 @@ namespace binary_json {
             // providing a hint (obj.end() because serialized assoc probably will be sorted)
             obj.insert(obj.end(), std::move(entry));
         }
+        return obj;
     }
 
     template <typename Reader, typename ReaderEnd>
