@@ -18,7 +18,7 @@ namespace db {
 
         Object &addObject(std::string key, Object val);
 
-        auto getObject(std::string_view key) -> boost::optional<std::reference_wrapper<Object>>;
+        Object &getObject(std::string_view key);
 
         void setGlobalDeleteAfter(time_units da);
 

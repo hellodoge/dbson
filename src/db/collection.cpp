@@ -5,16 +5,13 @@
 
 using namespace std::chrono_literals;
 
-auto db::Collection::getObject(std::string_view key) -> boost::optional<std::reference_wrapper<Object>> {
-    auto obj_iter = this->values.find(key);
-    if (obj_iter == this->values.end())
-        return boost::none;
-    Object &obj = obj_iter->second;
-    if (obj.isExpired()) {
-        this->values.erase(obj_iter);
-        return boost::none;
+db::Object &db::Collection::getObject(std::string_view key) {
+    auto [obj_iter, is_inserted] = this->values.emplace(std::make_pair(key, boost::none));
+    db::Object &obj = obj_iter->second;
+    if (!is_inserted && obj.isExpired()) {
+        obj.set("", boost::none);
     }
-    return std::ref(obj);
+    return obj;
 }
 
 db::Object &db::Collection::addObject(std::string key, db::Object val) {

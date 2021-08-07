@@ -48,10 +48,7 @@ db::Object &DBService::get_object(binary_json::assoc &params) {
     if (object_name_opt == boost::none)
         throw missing_argument_error("missing object name");
     std::string_view object_name = (*object_name_opt).get();
-    auto object_opt = collection.getObject(object_name);
-    if (object_opt == boost::none)
-        throw value_not_found_error("no object found");
-    return *object_opt;
+    return collection.getObject(object_name);
 }
 
 binary_json::object_t DBService::get(binary_json::assoc &params) {
