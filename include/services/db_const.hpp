@@ -9,6 +9,7 @@ namespace service::db_service::labels {
     const std::string_view success_status = "success";
     const std::string_view message = "message";
     const std::string_view data = "data";
+    const std::string_view inner = "result_of";
 }
 
 namespace service::db_service::commands {

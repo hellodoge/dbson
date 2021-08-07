@@ -20,6 +20,7 @@ namespace service::db_service {
     private:
         db::Collection &get_collection(binary_json::assoc &params);
         db::Object &get_object(binary_json::assoc &params);
+        binary_json::object_t execute_inner(binary_json::assoc &params);
 
     private:
         flat_map<std::string, db::Collection, std::less<>> collections;

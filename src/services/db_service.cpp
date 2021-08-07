@@ -26,6 +26,14 @@ binary_json::object_t DBService::execute(binary_json::object_t command_obj) {
     return this->call(command_name, params);
 }
 
+binary_json::object_t DBService::execute_inner(binary_json::assoc &params) {
+    auto inner_iter = params.find(labels::inner);
+    if (inner_iter == params.end())
+        throw missing_argument_error{};
+    binary_json::object_t inner = std::move(inner_iter->second);
+    return this->execute(inner);
+}
+
 db::Collection &DBService::get_collection(binary_json::assoc &params) {
     auto collection_name_opt = get_argument_of_type<binary_json::string>(labels::collection, params);
     if (collection_name_opt == boost::none)
@@ -56,6 +64,25 @@ binary_json::object_t DBService::get(binary_json::assoc &params) {
     binary_json::assoc response {};
     response.emplace(std::make_pair(labels::success_status, true));
     response.emplace(std::make_pair(labels::data, raw_object));
+    return response;
+}
+
+binary_json::object_t DBService::set(binary_json::assoc &params) {
+    db::Object &object = this->get_object(params);
+    std::string_view path = "";
+    auto path_opt = get_argument_of_type<binary_json::string>(labels::object_selector, params);
+    if (path_opt != boost::none)
+        path = (*path_opt).get();
+    binary_json::object_t data;
+    auto data_iter = params.find(labels::data);
+    if (data_iter != params.end()) {
+        data = std::move(data_iter->second);
+    } else {
+        data = this->execute_inner(params);
+    }
+    object.set(path, std::move(data));
+    binary_json::assoc response{};
+    response.emplace(std::make_pair(labels::success_status, true));
     return response;
 }
 
