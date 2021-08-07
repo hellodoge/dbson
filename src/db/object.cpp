@@ -52,6 +52,7 @@ binary_json::object_t &db::Object::resolve(std::string_view path) {
 }
 
 void db::Object::set(std::string_view path, binary_json::object_t value) {
+    this->modified = clock::now();
     auto &obj = this->resolve(path);
     obj = std::move(value);
 }
