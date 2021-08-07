@@ -44,7 +44,7 @@ db::Collection &DBService::get_collection(binary_json::assoc &params) {
 
 db::Object &DBService::get_object(binary_json::assoc &params) {
     db::Collection &collection = this->get_collection(params);
-    auto object_name_opt = get_argument_of_type<binary_json::string>(labels::collection, params);
+    auto object_name_opt = get_argument_of_type<binary_json::string>(labels::object_name, params);
     if (object_name_opt == boost::none)
         throw missing_argument_error("missing object name");
     std::string_view object_name = (*object_name_opt).get();
