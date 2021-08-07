@@ -5,6 +5,7 @@
 
 #include "db/object.hpp"
 #include "binary_json/object.hpp"
+#include "exceptions/unexpected_type_error.hpp"
 
 using namespace std::chrono_literals;
 
@@ -34,7 +35,7 @@ binary_json::object_t &db::Object::resolve(std::string_view path) {
         if (assoc_ptr == nullptr) {
             auto null_ptr = boost::get<binary_json::none>(obj);
             if (null_ptr == nullptr)
-                throw std::domain_error("resolve: not an assoc");
+                throw unexpected_type_error("resolve: not an assoc");
             *obj = binary_json::assoc{};
             assoc_ptr = boost::get<binary_json::assoc>(obj);
         }
