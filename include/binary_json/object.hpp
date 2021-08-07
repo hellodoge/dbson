@@ -18,7 +18,7 @@ namespace binary_json {
             integer, real, string,
             std::vector<boost::recursive_variant_>,
             flat_map<string, boost::recursive_variant_>,
-            none
+            bool, none
     >::type object_t;
 
     using array = std::vector<object_t>;
@@ -30,6 +30,8 @@ namespace binary_json {
         String = 's',
         Array = 'a',
         Assoc = 'o',
+        True = 't',
+        False = 'f',
         None = 'n'
     };
 

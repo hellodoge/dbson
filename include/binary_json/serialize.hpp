@@ -122,6 +122,9 @@ namespace binary_json {
                 return serialize_array(w, v);
             } else if constexpr (std::is_same<T, assoc>::value) {
                 return serialize_assoc(w, v);
+            } else if constexpr (std::is_same<T, bool>::value) {
+                *w++ = v ? True : False;
+                return 1;
             } else if constexpr (std::is_same<T, none>::value) {
                 *w++ = None;
                 return 1;

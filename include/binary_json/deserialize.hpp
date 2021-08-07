@@ -137,6 +137,10 @@ namespace binary_json {
                 return deserialize_array(r, end);
             case Assoc:
                 return deserialize_assoc(r, end);
+            case True:
+                return true;
+            case False:
+                return false;
             case None:
                 return boost::none;
         }
