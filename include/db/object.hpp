@@ -21,6 +21,7 @@ namespace db {
         void setExpiration(std::chrono::seconds da);
 
         void set(std::string_view path, binary_json::object_t);
+        const binary_json::object_t &get(std::string_view path);
 
         template <typename Writer>
         size_t getSerialized(Writer w, std::string_view path) noexcept(false) {

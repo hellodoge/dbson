@@ -55,3 +55,7 @@ void db::Object::set(std::string_view path, binary_json::object_t value) {
     auto &obj = this->resolve(path);
     obj = std::move(value);
 }
+
+const binary_json::object_t &db::Object::get(std::string_view path) {
+    return this->resolve(path);
+}
