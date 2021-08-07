@@ -17,12 +17,12 @@ namespace binary_json {
     typedef boost::make_recursive_variant<
             integer, real, string,
             std::vector<boost::recursive_variant_>,
-            flat_map<string, boost::recursive_variant_>,
+            flat_map<string, boost::recursive_variant_, std::less<>>,
             bool, none
     >::type object_t;
 
     using array = std::vector<object_t>;
-    using assoc = flat_map<string, object_t>;
+    using assoc = flat_map<string, object_t, std::less<>>;
 
     enum datatype_id {
         Integer = 'i',
