@@ -58,10 +58,7 @@ binary_json::object_t DBService::get(binary_json::assoc &params) {
     if (path_opt != boost::none)
         path = (*path_opt).get();
     const binary_json::object_t &raw_object = object.get(path);
-    binary_json::assoc response {};
-    response.emplace(std::make_pair(labels::success_status, true));
-    response.emplace(std::make_pair(labels::data, raw_object));
-    return response;
+    return raw_object;
 }
 
 binary_json::object_t DBService::set(binary_json::assoc &params) {
@@ -78,9 +75,7 @@ binary_json::object_t DBService::set(binary_json::assoc &params) {
         data = this->execute_inner(params);
     }
     object.set(path, std::move(data));
-    binary_json::assoc response{};
-    response.emplace(std::make_pair(labels::success_status, true));
-    return response;
+    return boost::none;
 }
 
 template <typename T>
