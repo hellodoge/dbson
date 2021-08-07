@@ -15,6 +15,7 @@ namespace service::db_service {
 
         virtual binary_json::object_t execute(binary_json::object_t command) = 0;
 
+    protected:
         virtual binary_json::object_t get(binary_json::assoc &params) = 0;
         virtual binary_json::object_t set(binary_json::assoc &params) = 0;
 

@@ -14,6 +14,7 @@ namespace service::db_service {
 
         binary_json::object_t execute(binary_json::object_t command) override;
 
+    private:
         binary_json::object_t get(binary_json::assoc &params) override;
         binary_json::object_t set(binary_json::assoc &params) override;
 
