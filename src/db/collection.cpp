@@ -17,10 +17,11 @@ auto db::Collection::getObject(std::string_view key) -> boost::optional<std::ref
     return std::ref(obj);
 }
 
-void db::Collection::addObject(std::string key, db::Object val) {
+db::Object &db::Collection::addObject(std::string key, db::Object val) {
     if (this->global_delete_after != 0s)
         val.setExpiration(this->global_delete_after);
-    values.insert_or_assign(std::move(key), std::move(val));
+    auto obj_iter = values.insert_or_assign(std::move(key), std::move(val));
+    return obj_iter.first->second;
 }
 
 void db::Collection::setGlobalDeleteAfter(std::chrono::seconds da) {

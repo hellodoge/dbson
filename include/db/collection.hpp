@@ -16,7 +16,7 @@ namespace db {
 
     struct Collection {
 
-        void addObject(std::string key, Object val);
+        Object &addObject(std::string key, Object val);
 
         auto getObject(std::string_view key) -> boost::optional<std::reference_wrapper<Object>>;
 
