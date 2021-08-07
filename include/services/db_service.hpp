@@ -12,14 +12,14 @@ namespace service::db_service {
 
     struct DBService final : AbstractDBService {
 
-        binary_json::object_t execute(const binary_json::object_t &command) override;
+        binary_json::object_t execute(binary_json::object_t command) override;
 
-        binary_json::object_t get(const binary_json::assoc &params) override;
-        binary_json::object_t set(const binary_json::assoc &params) override;
+        binary_json::object_t get(binary_json::assoc &params) override;
+        binary_json::object_t set(binary_json::assoc &params) override;
 
     private:
-        db::Collection &get_collection(const binary_json::assoc &params);
-        db::Object &get_object(const binary_json::assoc &params);
+        db::Collection &get_collection(binary_json::assoc &params);
+        db::Object &get_object(binary_json::assoc &params);
 
     private:
         flat_map<std::string, db::Collection, std::less<>> collections;

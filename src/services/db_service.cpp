@@ -10,14 +10,14 @@
 using namespace service::db_service;
 
 template <typename T>
-boost::optional<std::reference_wrapper<const T>> get_argument_of_type(
-        std::string_view label, const binary_json::assoc &params);
+boost::optional<std::reference_wrapper<T>> get_argument_of_type(
+        std::string_view label, binary_json::assoc &params);
 
-binary_json::object_t DBService::execute(const binary_json::object_t &command_obj) {
-    const binary_json::assoc *params_ptr = boost::get<binary_json::assoc>(&command_obj);
+binary_json::object_t DBService::execute(binary_json::object_t command_obj) {
+    binary_json::assoc *params_ptr = boost::get<binary_json::assoc>(&command_obj);
     if (params_ptr == nullptr)
         throw unexpected_type_error("command parameters must be an associative array");
-    const binary_json::assoc &params = *params_ptr;
+    binary_json::assoc &params = *params_ptr;
 
     auto command_name_opt = get_argument_of_type<binary_json::string>(labels::command, params);
     if (command_name_opt == boost::none)
@@ -26,7 +26,7 @@ binary_json::object_t DBService::execute(const binary_json::object_t &command_ob
     return this->call(command_name, params);
 }
 
-db::Collection &DBService::get_collection(const binary_json::assoc &params) {
+db::Collection &DBService::get_collection(binary_json::assoc &params) {
     auto collection_name_opt = get_argument_of_type<binary_json::string>(labels::collection, params);
     if (collection_name_opt == boost::none)
         throw missing_argument_error("missing collection name");
@@ -34,7 +34,7 @@ db::Collection &DBService::get_collection(const binary_json::assoc &params) {
     return this->collections[collection_name];
 }
 
-db::Object &DBService::get_object(const binary_json::assoc &params) {
+db::Object &DBService::get_object(binary_json::assoc &params) {
     db::Collection &collection = this->get_collection(params);
     auto object_name_opt = get_argument_of_type<binary_json::string>(labels::collection, params);
     if (object_name_opt == boost::none)
@@ -46,7 +46,7 @@ db::Object &DBService::get_object(const binary_json::assoc &params) {
     return *object_opt;
 }
 
-binary_json::object_t DBService::get(const binary_json::assoc &params) {
+binary_json::object_t DBService::get(binary_json::assoc &params) {
     db::Object &object = this->get_object(params);
     std::string_view path = "";
     auto path_opt = get_argument_of_type<binary_json::string>(labels::object_selector, params);
@@ -60,13 +60,13 @@ binary_json::object_t DBService::get(const binary_json::assoc &params) {
 }
 
 template <typename T>
-boost::optional<std::reference_wrapper<const T>> get_argument_of_type(
-        std::string_view label, const binary_json::assoc &params) {
+boost::optional<std::reference_wrapper<T>> get_argument_of_type(
+        std::string_view label, binary_json::assoc &params) {
     auto parameter_iter = params.find(label);
     if (parameter_iter == params.end())
         return boost::none;
-    const binary_json::object_t &parameter_obj = parameter_iter->second;
-    auto parameter_ptr = boost::get<binary_json::string>(&parameter_obj);
+    binary_json::object_t &parameter_obj = parameter_iter->second;
+    auto parameter_ptr = boost::get<T>(&parameter_obj);
     if (parameter_ptr == nullptr)
         return boost::none;
     return std::ref(*parameter_ptr);

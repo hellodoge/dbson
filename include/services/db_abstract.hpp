@@ -9,17 +9,17 @@ namespace service::db_service {
 
     struct AbstractDBService {
 
-        using function = std::function<binary_json::object_t(const binary_json::assoc&)>;
+        using function = std::function<binary_json::object_t(binary_json::assoc&)>;
 
         virtual ~AbstractDBService() = default;
 
-        virtual binary_json::object_t execute(const binary_json::object_t &command) = 0;
+        virtual binary_json::object_t execute(binary_json::object_t command) = 0;
 
-        virtual binary_json::object_t get(const binary_json::assoc &params) = 0;
-        virtual binary_json::object_t set(const binary_json::assoc &params) = 0;
+        virtual binary_json::object_t get(binary_json::assoc &params) = 0;
+        virtual binary_json::object_t set(binary_json::assoc &params) = 0;
 
     protected:
-        binary_json::object_t call(std::string_view name, const binary_json::assoc &params) {
+        binary_json::object_t call(std::string_view name, binary_json::assoc &params) {
             auto function_iter = functions.find(name);
             if (function_iter == functions.end())
                 throw std::invalid_argument("function not found");
