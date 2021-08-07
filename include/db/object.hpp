@@ -15,6 +15,7 @@ namespace db {
     using time_units = std::chrono::seconds;
 
     struct Object {
+        Object() : Object(boost::none) {};
         explicit Object(binary_json::object_t obj);
 
         bool isExpired();
