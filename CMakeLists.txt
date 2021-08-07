@@ -4,7 +4,7 @@ project(dbson)
 set(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_FLAGS "-fconcepts")
 
-find_package(Boost 1.65.0 REQUIRED)
+find_package(Boost 1.76.0 REQUIRED)
 
 include_directories(include)
 
