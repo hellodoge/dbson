@@ -27,11 +27,16 @@ binary_json::object_t DBService::execute(binary_json::object_t command_obj) {
 }
 
 binary_json::object_t DBService::execute_inner(binary_json::assoc &params) {
-    auto inner_iter = params.find(labels::inner);
-    if (inner_iter == params.end())
-        throw missing_argument_error{};
-    binary_json::object_t inner = std::move(inner_iter->second);
-    return this->execute(inner);
+    auto inner_opt = get_argument_of_type<binary_json::assoc>(labels::inner, params);
+    if (inner_opt == boost::none)
+        throw value_not_found_error{};
+    binary_json::assoc &inner_params = *inner_opt;
+
+    auto command_name_opt = get_argument_of_type<binary_json::string>(labels::command, inner_params);
+    if (command_name_opt == boost::none)
+        throw missing_argument_error("missing command name");
+    std::string_view command_name = (*command_name_opt).get();
+    return this->call(command_name, inner_params);
 }
 
 db::Collection &DBService::get_collection(binary_json::assoc &params) {
