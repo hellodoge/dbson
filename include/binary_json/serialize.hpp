@@ -33,6 +33,11 @@ namespace binary_json {
 
     template <typename Writer>
     size_t serialize_len(Writer &w, size_t len) {
+        if (len <= std::numeric_limits<uint8_t>::max()) {
+            *w++ = static_cast<char>(sizeof(uint8_t));
+            *w++ = static_cast<char>(len);
+            return 1;
+        }
         if (len <= std::numeric_limits<uint16_t>::max()) {
             *w++ = static_cast<char>(sizeof(uint16_t));
             return serialize_uint<size_t, uint16_t>(w, len) + 1;

@@ -30,6 +30,11 @@ namespace binary_json {
         size_t size = static_cast<size_t>(*r++);
         if (size > sizeof(size_t))
             throw std::length_error("deserializer: int len is too big");
+        if (size == sizeof(uint8_t)) {
+            if (r == end)
+                throw eof_error{};
+            return static_cast<size_t>(*r++);
+        }
         if (size == sizeof(uint16_t)) {
             uint16_t value_u16 = read_uint<uint16_t>(r, end);
             value_u16 = ntohs(value_u16);
