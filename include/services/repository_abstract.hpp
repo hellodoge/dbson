@@ -1,19 +1,19 @@
-#ifndef DBSON_DB_ABSTRACT_HPP
-#define DBSON_DB_ABSTRACT_HPP
+#ifndef DBSON_REPOSITORY_ABSTRACT_HPP
+#define DBSON_REPOSITORY_ABSTRACT_HPP
 
 #include <functional>
 #include <unordered_map>
 
-#include "services/db_const.hpp"
+#include "services/repository_const.hpp"
 #include "binary_json/object.hpp"
 
-namespace service::db_service {
+namespace service::repository {
 
-    struct AbstractDBService {
+    struct AbstractRepositoryService {
 
         using function = std::function<binary_json::object_t(binary_json::assoc&)>;
 
-        virtual ~AbstractDBService() = default;
+        virtual ~AbstractRepositoryService() = default;
 
         virtual binary_json::object_t execute(binary_json::object_t command) = 0;
 
@@ -38,4 +38,4 @@ namespace service::db_service {
 
 }
 
-#endif //DBSON_DB_ABSTRACT_HPP
+#endif //DBSON_REPOSITORY_ABSTRACT_HPP

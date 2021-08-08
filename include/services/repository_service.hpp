@@ -1,16 +1,16 @@
-#ifndef DBSON_DB_SERVICE_HPP
-#define DBSON_DB_SERVICE_HPP
+#ifndef DBSON_REPOSITORY_SERVICE_HPP
+#define DBSON_REPOSITORY_SERVICE_HPP
 
 #include <boost/container/flat_map.hpp>
 
 #include "db/collection.hpp"
-#include "services/db_abstract.hpp"
+#include "services/repository_abstract.hpp"
 
-namespace service::db_service {
+namespace service::repository {
 
     using boost::container::flat_map;
 
-    struct DBService final : AbstractDBService {
+    struct RepositoryService final : AbstractRepositoryService {
 
         binary_json::object_t execute(binary_json::object_t command) override;
 
@@ -29,4 +29,4 @@ namespace service::db_service {
 
 }
 
-#endif //DBSON_DB_SERVICE_HPP
+#endif //DBSON_REPOSITORY_SERVICE_HPP
