@@ -30,9 +30,9 @@ void Handler::process(Task task) {
 }
 
 std::future<void> Handler::run() {
-    if (this->running)
+    bool expected = false;
+    if (!this->running.compare_exchange_strong(expected, true))
         throw std::runtime_error("attempt to run handler while it is already running");
-    this->running = true;
     this->stop = false;
     return std::async(std::launch::async, [this](){
         while (true) {
