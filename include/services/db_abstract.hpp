@@ -1,9 +1,11 @@
 #ifndef DBSON_DB_ABSTRACT_HPP
 #define DBSON_DB_ABSTRACT_HPP
 
+#include <functional>
 #include <unordered_map>
 
 #include "services/db_const.hpp"
+#include "binary_json/object.hpp"
 
 namespace service::db_service {
 
