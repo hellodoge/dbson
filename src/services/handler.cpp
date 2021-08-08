@@ -26,7 +26,7 @@ void Handler::process(Task task) {
         response.insert(std::make_pair(db::labels::message, binary_json::string(internal_error_message)));
         std::cerr << e.what() << std::endl;
     }
-    task.callback(response);
+    task.callback(std::move(response));
 }
 
 std::future<void> Handler::run() {
