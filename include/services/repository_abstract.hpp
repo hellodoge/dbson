@@ -9,11 +9,11 @@
 
 namespace service::repository {
 
-    struct AbstractRepositoryService {
+    struct AbstractRepository {
 
         using function = std::function<binary_json::object_t(binary_json::assoc&)>;
 
-        virtual ~AbstractRepositoryService() = default;
+        virtual ~AbstractRepository() = default;
 
         virtual binary_json::object_t execute(binary_json::object_t command) = 0;
 

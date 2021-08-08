@@ -14,9 +14,9 @@ namespace service::handler {
     using bytes = std::vector<char>;
     using callback_function = std::function<void(binary_json::object_t response)>;
 
-    struct IHandlerService {
+    struct IHandler {
 
-        virtual ~IHandlerService() = default;
+        virtual ~IHandler() = default;
 
         virtual void add_task(binary_json::object_t command,
                               callback_function callback) = 0;

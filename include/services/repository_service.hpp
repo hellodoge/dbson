@@ -10,7 +10,7 @@ namespace service::repository {
 
     using boost::container::flat_map;
 
-    struct RepositoryService final : AbstractRepositoryService {
+    struct Repository final : AbstractRepository {
 
         binary_json::object_t execute(binary_json::object_t command) override;
 

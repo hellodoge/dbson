@@ -4,13 +4,13 @@
 
 using namespace service::handler;
 
-void HandlerService::add_task(binary_json::object_t command, callback_function callback) {
+void Handler::add_task(binary_json::object_t command, callback_function callback) {
     std::lock_guard lock { this->tasks_mutex };
     this->tasks.emplace_back(Task{std::move(command), std::move(callback)});
     this->new_task.notify_one();
 }
 
-void HandlerService::process(Task task) {
+void Handler::process(Task task) {
     binary_json::assoc response;
     try {
         binary_json::object_t command = std::move(task.command);
@@ -29,7 +29,7 @@ void HandlerService::process(Task task) {
     task.callback(response);
 }
 
-std::future<void> HandlerService::run() {
+std::future<void> Handler::run() {
     if (this->running)
         throw std::runtime_error("attempt to run handler while it is already running");
     this->running = true;
@@ -54,6 +54,6 @@ std::future<void> HandlerService::run() {
     });
 }
 
-void HandlerService::shutdown() {
+void Handler::shutdown() {
     this->stop = true;
 }

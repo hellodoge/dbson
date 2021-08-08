@@ -19,9 +19,9 @@ namespace service::handler {
 
     using namespace service;
 
-    struct HandlerService final : IHandlerService {
+    struct Handler final : IHandler {
 
-        explicit HandlerService(repository::AbstractRepositoryService &repository): repository{repository} {}
+        explicit Handler(repository::AbstractRepository &repository): repository{repository} {}
 
         const std::string_view internal_error_message = "internal error";
 
@@ -42,7 +42,7 @@ namespace service::handler {
         void process(Task task);
 
     private:
-        repository::AbstractRepositoryService &repository;
+        repository::AbstractRepository &repository;
         std::atomic_bool running = false;
         std::atomic_bool stop = false;
         std::deque<Task> tasks;
