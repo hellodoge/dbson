@@ -2,7 +2,7 @@
 #include <boost/optional.hpp>
 
 #include "db/consts.hpp"
-#include "services/repository_service.hpp"
+#include "services/repository.hpp"
 #include "exceptions/value_not_found_error.hpp"
 #include "exceptions/unexpected_type_error.hpp"
 #include "exceptions/missing_argument_error.hpp"

@@ -1,5 +1,5 @@
-#ifndef DBSON_HANDLER_SERVICE_HPP
-#define DBSON_HANDLER_SERVICE_HPP
+#ifndef DBSON_HANDLER_HPP
+#define DBSON_HANDLER_HPP
 
 #include <iostream>
 #include <queue>
@@ -52,4 +52,4 @@ namespace service::handler {
 
 }
 
-#endif //DBSON_HANDLER_SERVICE_HPP
+#endif //DBSON_HANDLER_HPP

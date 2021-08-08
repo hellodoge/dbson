@@ -1,5 +1,5 @@
-#ifndef DBSON_REPOSITORY_SERVICE_HPP
-#define DBSON_REPOSITORY_SERVICE_HPP
+#ifndef DBSON_REPOSITORY_HPP
+#define DBSON_REPOSITORY_HPP
 
 #include <boost/container/flat_map.hpp>
 
@@ -29,4 +29,4 @@ namespace service::repository {
 
 }
 
-#endif //DBSON_REPOSITORY_SERVICE_HPP
+#endif //DBSON_REPOSITORY_HPP
