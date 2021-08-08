@@ -4,7 +4,7 @@
 #include <functional>
 #include <unordered_map>
 
-#include "services/repository_const.hpp"
+#include "db/consts.hpp"
 #include "binary_json/object.hpp"
 
 namespace service::repository {
@@ -31,8 +31,8 @@ namespace service::repository {
 
     private:
         std::unordered_map<std::string_view, function> functions = {
-                std::make_pair(commands::get, [this](auto &params) { return this->get(params); }),
-                std::make_pair(commands::set, [this](auto &params) { return this->set(params); })
+                std::make_pair(db::commands::get, [this](auto &params) { return this->get(params); }),
+                std::make_pair(db::commands::set, [this](auto &params) { return this->set(params); })
         };
     };
 

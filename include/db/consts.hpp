@@ -1,7 +1,11 @@
-#ifndef DBSON_REPOSITORY_CONST_HPP
-#define DBSON_REPOSITORY_CONST_HPP
+//
+// Created by waldemar on 8/8/21.
+//
 
-namespace service::repository::labels {
+#ifndef DBSON_CONSTS_HPP
+#define DBSON_CONSTS_HPP
+
+namespace db::labels {
     const std::string_view command = "command";
     const std::string_view collection = "collection";
     const std::string_view object_name = "object";
@@ -12,10 +16,10 @@ namespace service::repository::labels {
     const std::string_view inner = "result_of";
 }
 
-namespace service::repository::commands {
+namespace db::commands {
     const std::string_view ping = "ping";
     const std::string_view get = "get";
     const std::string_view set = "set";
 }
 
-#endif //DBSON_REPOSITORY_CONST_HPP
+#endif //DBSON_CONSTS_HPP

@@ -1,8 +1,8 @@
 #include <map>
 #include <boost/optional.hpp>
 
+#include "db/consts.hpp"
 #include "services/repository_service.hpp"
-#include "services/repository_const.hpp"
 #include "exceptions/value_not_found_error.hpp"
 #include "exceptions/unexpected_type_error.hpp"
 #include "exceptions/missing_argument_error.hpp"
@@ -19,7 +19,7 @@ binary_json::object_t RepositoryService::execute(binary_json::object_t command_o
         throw unexpected_type_error("command parameters must be an associative array");
     binary_json::assoc &params = *params_ptr;
 
-    auto command_name_opt = get_argument_of_type<binary_json::string>(labels::command, params);
+    auto command_name_opt = get_argument_of_type<binary_json::string>(db::labels::command, params);
     if (command_name_opt == boost::none)
         throw missing_argument_error("missing command name");
     std::string_view command_name = (*command_name_opt).get();
@@ -27,12 +27,12 @@ binary_json::object_t RepositoryService::execute(binary_json::object_t command_o
 }
 
 binary_json::object_t RepositoryService::execute_inner(binary_json::assoc &params) {
-    auto inner_opt = get_argument_of_type<binary_json::assoc>(labels::inner, params);
+    auto inner_opt = get_argument_of_type<binary_json::assoc>(db::labels::inner, params);
     if (inner_opt == boost::none)
         throw value_not_found_error{};
     binary_json::assoc &inner_params = *inner_opt;
 
-    auto command_name_opt = get_argument_of_type<binary_json::string>(labels::command, inner_params);
+    auto command_name_opt = get_argument_of_type<binary_json::string>(db::labels::command, inner_params);
     if (command_name_opt == boost::none)
         throw missing_argument_error("missing command name");
     std::string_view command_name = (*command_name_opt).get();
@@ -40,7 +40,7 @@ binary_json::object_t RepositoryService::execute_inner(binary_json::assoc &param
 }
 
 db::Collection &RepositoryService::get_collection(binary_json::assoc &params) {
-    auto collection_name_opt = get_argument_of_type<binary_json::string>(labels::collection, params);
+    auto collection_name_opt = get_argument_of_type<binary_json::string>(db::labels::collection, params);
     if (collection_name_opt == boost::none)
         throw missing_argument_error("missing collection name");
     const std::string &collection_name = (*collection_name_opt).get();
@@ -49,7 +49,7 @@ db::Collection &RepositoryService::get_collection(binary_json::assoc &params) {
 
 db::Object &RepositoryService::get_object(binary_json::assoc &params) {
     db::Collection &collection = this->get_collection(params);
-    auto object_name_opt = get_argument_of_type<binary_json::string>(labels::object_name, params);
+    auto object_name_opt = get_argument_of_type<binary_json::string>(db::labels::object_name, params);
     if (object_name_opt == boost::none)
         throw missing_argument_error("missing object name");
     std::string_view object_name = (*object_name_opt).get();
@@ -59,7 +59,7 @@ db::Object &RepositoryService::get_object(binary_json::assoc &params) {
 binary_json::object_t RepositoryService::get(binary_json::assoc &params) {
     db::Object &object = this->get_object(params);
     std::string_view path = "";
-    auto path_opt = get_argument_of_type<binary_json::string>(labels::object_selector, params);
+    auto path_opt = get_argument_of_type<binary_json::string>(db::labels::object_selector, params);
     if (path_opt != boost::none)
         path = (*path_opt).get();
     const binary_json::object_t &raw_object = object.get(path);
@@ -69,11 +69,11 @@ binary_json::object_t RepositoryService::get(binary_json::assoc &params) {
 binary_json::object_t RepositoryService::set(binary_json::assoc &params) {
     db::Object &object = this->get_object(params);
     std::string_view path = "";
-    auto path_opt = get_argument_of_type<binary_json::string>(labels::object_selector, params);
+    auto path_opt = get_argument_of_type<binary_json::string>(db::labels::object_selector, params);
     if (path_opt != boost::none)
         path = (*path_opt).get();
     binary_json::object_t data;
-    auto data_iter = params.find(labels::data);
+    auto data_iter = params.find(db::labels::data);
     if (data_iter != params.end()) {
         data = std::move(data_iter->second);
     } else {
