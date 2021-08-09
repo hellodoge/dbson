@@ -41,7 +41,9 @@ std::future<void> Handler::run() {
                 this->new_task.wait_for(lock, std::chrono::seconds{5},[this]() {
                     return !this->tasks.empty() || this->stop;
                 });
-                if (this->tasks.empty() && this->stop) {
+                if (this->tasks.empty()) {
+                    if (!this->stop)
+                        continue;
                     this->stop = false;
                     this->running = false;
                     return;
