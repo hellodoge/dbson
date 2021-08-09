@@ -83,6 +83,10 @@ binary_json::object_t Repository::set(binary_json::assoc &params) {
     return boost::none;
 }
 
+binary_json::object_t Repository::ping(binary_json::assoc &params) {
+    return binary_json::string { "pong" };
+}
+
 template <typename T>
 boost::optional<std::reference_wrapper<T>> get_argument_of_type(
         std::string_view label, binary_json::assoc &params) {
