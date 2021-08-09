@@ -48,11 +48,16 @@ void Server::serve() {
     });
 }
 
-void Server::run() {
+std::future<void> Server::run() {
     bool expected = false;
     if (!this->running.compare_exchange_strong(expected, true))
         throw std::runtime_error("attempt to run server while it is already running");
-    serve();
+    return std::async(std::launch::async, [this]() {
+        serve();
+        while (this->running) {
+            this->context.run();
+        }
+    });
 }
 
 void Server::shutdown() {

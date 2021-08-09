@@ -23,7 +23,7 @@ namespace service::server {
             context, endpoint(boost::asio::ip::tcp::v4(), config.port)
         }, config{config} {}
 
-        void run();
+        std::future<void> run();
         void shutdown();
 
     private:
