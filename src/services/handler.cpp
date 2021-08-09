@@ -17,7 +17,8 @@ void Handler::process(Task task) {
         // TODO middleware etc
         binary_json::object_t data = repository.execute(std::move(command));
         response.insert(std::make_pair(db::labels::success_status, true));
-        response.insert(std::make_pair(db::labels::data, std::move(data)));
+        if (boost::get<binary_json::none>(&data) == nullptr)
+            response.insert(std::make_pair(db::labels::data, std::move(data)));
     } catch (dbson_error &e) {
         response.insert(std::make_pair(db::labels::success_status, false));
         response.insert(std::make_pair(db::labels::message, binary_json::string { e.what() }));
