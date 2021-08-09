@@ -5,7 +5,7 @@ namespace service::server {
 
     struct ServerConfig {
         int port;
-        bool log_io_errors;
+        size_t max_message_size;
     };
 }
 
