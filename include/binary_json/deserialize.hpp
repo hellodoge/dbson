@@ -7,6 +7,7 @@
 
 #include "binary_json/object.hpp"
 #include "exceptions/eof_error.hpp"
+#include "exceptions/deserializer_error.hpp"
 #include "util/bswap.hpp"
 
 namespace binary_json {
@@ -29,7 +30,7 @@ namespace binary_json {
             throw eof_error{};
         size_t size = static_cast<size_t>(*r++);
         if (size > sizeof(size_t))
-            throw std::length_error("deserializer: int len is too big");
+            throw deserializer_error("deserializer: int len is too big");
         if (size == sizeof(uint8_t)) {
             if (r == end)
                 throw eof_error{};
@@ -51,7 +52,7 @@ namespace binary_json {
                 value_u64 = bswap_64(value_u64);
             return static_cast<size_t>(value_u64);
         }
-        throw std::logic_error("deserializer: unsupported int len");
+        throw deserializer_error("deserializer: unsupported int len");
     }
 
     template <typename Reader, typename ReaderEnd>
@@ -111,7 +112,7 @@ namespace binary_json {
                 throw eof_error{};
             datatype_id key_type = static_cast<datatype_id>(*r++);
             if (key_type != String)
-                throw std::logic_error("deserializer: key other than string not supported");
+                throw deserializer_error("deserializer: key other than string not supported");
             string key = deserialize_string(r, end);
             object_t value = deserialize_object(r, end);
             auto entry = std::make_pair(std::move(key), std::move(value));
@@ -144,7 +145,7 @@ namespace binary_json {
             case None:
                 return boost::none;
         }
-        throw std::domain_error("unknown type");
+        throw deserializer_error("deserializer: unknown type");
     }
 
     template <typename Reader, typename ReaderEnd>
