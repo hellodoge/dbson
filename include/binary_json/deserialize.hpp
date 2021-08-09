@@ -147,6 +147,11 @@ namespace binary_json {
         throw std::domain_error("unknown type");
     }
 
+    template <typename Reader, typename ReaderEnd>
+    object_t deserialize(Reader r, ReaderEnd end) noexcept(false) {
+        return deserialize_object(r, end);
+    }
+
 }
 
 #endif //DBSON_DESERIALIZE_HPP

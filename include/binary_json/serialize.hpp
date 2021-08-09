@@ -133,6 +133,11 @@ namespace binary_json {
         };
         return boost::apply_visitor(visitor, obj);
     }
+
+    template <typename Writer>
+    size_t serialize(Writer w, const object_t &obj) {
+        return serialize_object(w, obj);
+    }
 }
 
 #endif //DBSON_SERIALIZE_HPP
