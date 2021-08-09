@@ -45,4 +45,6 @@ namespace binary_json {
         std::is_same<T, none>::value;
 }
 
+void operator+=(binary_json::object_t &sum, binary_json::object_t &&add);
+
 #endif //DBSON_OBJECT_HPP
