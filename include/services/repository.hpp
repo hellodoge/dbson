@@ -18,6 +18,7 @@ namespace service::repository {
         binary_json::object_t get(binary_json::assoc &params) override;
         binary_json::object_t set(binary_json::assoc &params) override;
         binary_json::object_t ping(binary_json::assoc &params) override;
+        binary_json::object_t sum(binary_json::assoc &params) override;
 
     private:
         db::Collection &get_collection(binary_json::assoc &params);

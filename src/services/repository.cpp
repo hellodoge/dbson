@@ -28,8 +28,16 @@ binary_json::object_t Repository::execute(binary_json::object_t command_obj) {
 
 binary_json::object_t Repository::execute_inner(binary_json::assoc &params) {
     auto inner_opt = get_argument_of_type<binary_json::assoc>(db::labels::inner, params);
-    if (inner_opt == boost::none)
-        throw value_not_found_error{};
+    if (inner_opt == boost::none) {
+        auto inner_arr_opt = get_argument_of_type<binary_json::array>(db::labels::inner, params);
+        if (inner_arr_opt == boost::none)
+            return boost::none;
+        binary_json::array results;
+        for (auto &el : (*inner_arr_opt).get()) {
+            results.push_back(this->execute(std::move(el)));
+        }
+        return std::move(results);
+    }
     binary_json::assoc &inner_params = *inner_opt;
 
     auto command_name_opt = get_argument_of_type<binary_json::string>(db::labels::command, inner_params);
@@ -85,6 +93,41 @@ binary_json::object_t Repository::set(binary_json::assoc &params) {
 
 binary_json::object_t Repository::ping(binary_json::assoc &params) {
     return binary_json::string { "pong" };
+}
+
+binary_json::object_t Repository::sum(binary_json::assoc &params) {
+    binary_json::object_t sum;
+    bool sum_initialized = false;
+
+    auto sum_element = [&](binary_json::object_t el) {
+        if (!sum_initialized) {
+            sum = std::move(el);
+            sum_initialized = true;
+        } else {
+            sum += std::move(el);
+        }
+    };
+
+    auto sum_array = [&](binary_json::array &arr) {
+        for (auto &el : arr) {
+            sum_element(std::move(el));
+        }
+    };
+
+    auto res = this->execute_inner(params);
+    if (boost::get<binary_json::none>(&res) == nullptr) {
+        auto arr_ptr = boost::get<binary_json::array>(&res);
+        if (arr_ptr == nullptr)
+            sum_element(std::move(res));
+        else
+            sum_array(*arr_ptr);
+    }
+
+    auto elems = get_argument_of_type<binary_json::array>(db::labels::elements, params);
+    if (elems != boost::none)
+        sum_array(*elems);
+
+    return sum_initialized ? sum : boost::none;
 }
 
 template <typename T>

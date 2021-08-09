@@ -14,12 +14,14 @@ namespace db::labels {
     const std::string_view message = "message";
     const std::string_view data = "data";
     const std::string_view inner = "result_of";
+    const std::string_view elements = "elements";
 }
 
 namespace db::commands {
     const std::string_view ping = "ping";
     const std::string_view get = "get";
     const std::string_view set = "set";
+    const std::string_view sum = "sum";
 }
 
 #endif //DBSON_CONSTS_HPP
