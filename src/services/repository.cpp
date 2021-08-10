@@ -56,11 +56,18 @@ db::Collection &Repository::get_collection(binary_json::assoc &params) {
 }
 
 db::Object &Repository::get_object(binary_json::assoc &params) {
-    db::Collection &collection = this->get_collection(params);
-    auto object_name_opt = get_argument_of_type<binary_json::string>(db::labels::object_name, params);
-    if (object_name_opt == boost::none)
+    auto object_name_iter = params.find(db::labels::object_name);
+    if (object_name_iter == params.end())
         throw missing_argument_error("missing object name");
-    std::string_view object_name = (*object_name_opt).get();
+    binary_json::object_t object_name_obj = std::move((*object_name_iter).second);
+    // assoc is an inner command here
+    if (boost::get<binary_json::assoc>(&object_name_obj) != nullptr)
+        object_name_obj = this->execute(std::move(object_name_obj));
+    auto object_name_ptr = boost::get<binary_json::string>(&object_name_obj);
+    if (object_name_ptr == nullptr)
+        throw unexpected_type_error("object name must be of string type");
+    std::string_view object_name = *object_name_ptr;
+    db::Collection &collection = this->get_collection(params);
     return collection.getObject(object_name);
 }
 
