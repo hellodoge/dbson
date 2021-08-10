@@ -48,10 +48,17 @@ binary_json::object_t Repository::execute_inner(binary_json::assoc &params) {
 }
 
 db::Collection &Repository::get_collection(binary_json::assoc &params) {
-    auto collection_name_opt = get_argument_of_type<binary_json::string>(db::labels::collection, params);
-    if (collection_name_opt == boost::none)
-        throw missing_argument_error("missing collection name");
-    const std::string &collection_name = (*collection_name_opt).get();
+    auto collection_name_iter = params.find(db::labels::collection);
+    if (collection_name_iter == params.end())
+        throw missing_argument_error("missing object name");
+    binary_json::object_t collection_name_obj = std::move((*collection_name_iter).second);
+    // assoc is an inner command here
+    if (boost::get<binary_json::assoc>(&collection_name_obj) != nullptr)
+        collection_name_obj = this->execute(std::move(collection_name_obj));
+    auto collection_name_ptr = boost::get<binary_json::string>(&collection_name_obj);
+    if (collection_name_ptr == nullptr)
+        throw unexpected_type_error("object name must be of string type");
+    binary_json::string &collection_name = *collection_name_ptr;
     return this->collections[collection_name];
 }
 
