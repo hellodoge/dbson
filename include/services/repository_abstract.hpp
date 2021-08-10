@@ -6,6 +6,7 @@
 
 #include "db/consts.hpp"
 #include "binary_json/object.hpp"
+#include "exceptions/value_not_found_error.hpp"
 
 namespace service::repository {
 
@@ -27,7 +28,7 @@ namespace service::repository {
         binary_json::object_t call(std::string_view name, binary_json::assoc &params) {
             auto function_iter = functions.find(name);
             if (function_iter == functions.end())
-                throw std::invalid_argument("function not found");
+                throw value_not_found_error("function not found");
             return (function_iter->second)(params);
         }
 
